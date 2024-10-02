@@ -1,0 +1,13 @@
+articles
+id
+title
+description
+
+
+users
+id
+first_name
+middle_name
+last_name
+login
+password
