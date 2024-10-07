@@ -1,0 +1,15 @@
+{
+    "name": "myblog/blog",
+    "autoload": {
+        "psr-4": {
+            "Blog\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "arencho01",
+            "email": "a.vardanyan00101@gmail.com"
+        }
+    ],
+    "require": {}
+}

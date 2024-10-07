@@ -1,38 +1,44 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-//    header('Content-Type: text/html; charset=utf-8');
+require_once '../vendor/autoload.php';
 
-    $pdo;
-    try {
-        $pdo = new PDO('mysql:host=mysql;dbname=my_db;charset=utf8mb4', 'user', '123456');
-    }
-    catch (PDOException $e) {
-        echo 'Connection failed: ' . $e->getMessage();
-    }
+require_once '../src/core/Controller.php';
+require_once '../src/core/View.php';
+require_once '../src/controllers/PostController.php';
 
-    $articles = $pdo->query("SELECT * FROM articles");
-    $row = $articles->fetch();
+//require_once __DIR__ . '/../vendor/autoload.php';
+//
+//use Blog\models\Post;
+//?>
+<!---->
+<!--<!--Header-->-->
+<?php
+//    require_once '../src/views/total/header.php';
+//?>
+<!---->
+<?php
+//    if(isset($_GET['act'])) {
+//        switch($_GET['act']) {
+//            case 'register' :
+//                require_once '../src/views/total/register.php';
+//                break;
+//        }
+//    } else {
+//        require_once '../src/views/total/content.php';
+//    }
+//
+//
+//    $cl = new Post();
+//    print_r($cl->getPosts());
+//?>
 
-    while($article = $articles->fetch()) {
-        echo $article['title'] . '<br>';
-    }
+
+
+<?php
+    require_once '../src/views/total/footer.php';
 ?>
 
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="icon" href="../favicon.ico">
 
-    <title>Блог</title>
-</head>
-<body>
-    <h2>Hello world</h2>
 
-    <div>
-
-    </div>
-</body>
-</html>
