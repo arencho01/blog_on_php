@@ -1,12 +1,14 @@
 <?php
 
-namespace Blog\Controllers;
+namespace Blog\controllers;
 
-use Blog\Models\Post;
+use Blog\core\Controller;
+use Blog\core\View;
+use Blog\models\Post;
 
-class PostController {
-    public function index() {
-        $allPosts = new Post();
-        return (new Post())->getPosts();
+class PostController extends Controller {
+    public function index(): void {
+        $allPosts = Post::getAllPosts();
+        View::render('index', ['posts' => $allPosts]);
     }
 }

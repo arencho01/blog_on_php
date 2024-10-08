@@ -1,16 +1,24 @@
 <?php
+namespace Blog\core;
+
+use Exception;
 
 class View {
     public static function render($view, $data = []) {
+
         extract($data);
 
-        $viewFile = "../app/views/" . $view . ".php";
+        $viewFile = __DIR__ . "/../views/" . $view . ".php";
 
         // Проверяю существует ли файл
         if (file_exists($viewFile)) {
-            include_once "../app/views/layout.php";
+            include_once __DIR__ . "/../views/$view.php";
         } else {
             throw new Exception("View $view not found");
         }
+    }
+
+    public static function trimPost() {
+
     }
 }

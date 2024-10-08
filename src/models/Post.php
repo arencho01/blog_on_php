@@ -1,11 +1,12 @@
 <?php
-namespace Blog\Models;
+namespace Blog\models;
 
+use Blog\core\Model;
 use PDO;
 use PDOException;
 
 
-class Post {
+class Post extends Model {
     private static $db;
     private static $host = "mysql";
     private static $dbname = "my_db";
@@ -32,10 +33,4 @@ class Post {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-
-//    public function getPosts(): false|array
-//    {
-//        return (new DatabaseModel())->query('SELECT * FROM articles');
-//    }
 }

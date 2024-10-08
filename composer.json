@@ -11,5 +11,8 @@
             "email": "a.vardanyan00101@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+      "ext-pdo": "*",
+      "ext-mbstring": "*"
+    }
 }
