@@ -8,9 +8,11 @@
                         <?php foreach ($posts as $post): ?>
                         <article class="blog__article">
                             <h3 class="blog__title">
-                                <a href="#">
+
+                                <?php echo "<a href='index.php?controller=post&action=show&id={$post['id']}'>" ?>
                                     <?php echo $post['title'] ?>
-                                </a>
+                                <?php echo "</a>" ?>
+
                             </h3>
                             <p class="blog__content">
                                 <?php echo $post['content'] ?>
