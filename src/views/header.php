@@ -27,7 +27,7 @@
                                 <a class="nav__link" href="/?act=search">Поиск статей</a>
                             </li>
                             <li class="nav_item">
-                                <a class="nav__link" href="index.php?controller=user&action=register">Регистрация</a>
+                                <a class="nav__link" href="index.php?controller=user&action=registration">Регистрация</a>
                             </li>
                         </ul>
                     </nav>

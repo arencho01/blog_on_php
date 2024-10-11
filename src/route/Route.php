@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Route;
+namespace App\route;
 
 class Route
 {
     public static function render(): void
     {
-        var_dump($_SERVER['QUERY_STRING']);
         $uri = self::processUri();
-
         if(!class_exists($uri['controller'])) {
             echo 'Такого контроллера нет';
             exit();
@@ -25,7 +23,6 @@ class Route
         $queryString = $_SERVER['QUERY_STRING'];
 
         parse_str($queryString, $uri);
-        var_dump('URI:', $uri);
 
         return $uri;
     }
@@ -36,7 +33,7 @@ class Route
         $actionName = self::getUri()['action'] ?? '';
         $id = self::getUri()['id'] ?? '';
 
-        $controller = !empty($controllerName) ? 'App\Controllers\\' . ucfirst($controllerName) . 'Controller' : 'App\Controllers\\PostController';
+        $controller = !empty($controllerName) ? 'App\controllers\\' . ucfirst($controllerName) . 'Controller' : 'App\controllers\\PostController';
         $method = !empty($actionName) ? $actionName : 'index';
         $id = !empty($id) ? $id : '';
 

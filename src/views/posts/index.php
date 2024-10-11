@@ -1,13 +1,14 @@
-<?php include_once 'header.php' ?>
+<?php include_once HEADER_PATH ?>
 
     <main class="main">
         <section class="blog">
             <div class="container">
                 <div class="blog__inner">
+                    <h3 class="blog__title">Все публикации</h3>
                     <ul class="blog__list">
                         <?php foreach ($posts as $post): ?>
                         <article class="blog__article">
-                            <h3 class="blog__title">
+                            <h3 class="blog__article-title">
 
                                 <?php echo "<a href='index.php?controller=post&action=show&id={$post['id']}'>" ?>
                                     <?php echo $post['title'] ?>
@@ -26,4 +27,4 @@
 
     </main>
 
-<?php include_once 'footer.php' ?>
+<?php include_once FOOTER_PATH ?>

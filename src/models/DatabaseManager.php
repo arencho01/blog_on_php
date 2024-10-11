@@ -4,7 +4,7 @@ namespace App\models;
 use PDO;
 use PDOException;
 
-class Settings {
+class DatabaseManager {
     private static string $host = "mysql";
     private static string $dbname = "my_db";
     private static string $user = "user";
