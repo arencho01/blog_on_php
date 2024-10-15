@@ -10,7 +10,7 @@ class Post {
     // Получаю все статьи
     public static function getAllPosts(): false|array
     {
-        $stmt = DatabaseManager::dbConnect()->prepare("SELECT * FROM posts ORDER BY created_at DESC LIMIT 3");
+        $stmt = DatabaseManager::dbConnect()->prepare("SELECT * FROM posts ORDER BY created_at DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

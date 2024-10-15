@@ -4,50 +4,50 @@
     <section class="register">
         <div class="container">
             <div class="register__inner">
+                <h3 class="register__title page-title">Регистрация</h3>
 
-                <form class="register__form" action="index.php?controller=user&action=registration" method="post">
-                    <h3 class="register__title">Регистрация</h3>
+                <form class="form register__form" action="index.php?controller=user&action=registration" method="post">
 
-                    <label class="register__label">
-                        <span class="register__label-span">
-                            Ваше имя:
+                    <label class="form__label register__label">
+                        <span class="form__label-span register__label-span">
+                            Придумайте логин:
                         </span>
 
-                        <?php if(isset($errors['userName']) && !$errors['userName']): ?>
-                            <span class="register__label-err">Это поле обязательно для заполнения</span>
+                        <?php if(!empty($errors['userName'])): ?>
+                            <span class="form__label-err register__label-err">
+                                 <?php echo $errors['userName'] ?>
+                            </span>
                         <?php endif; ?>
 
-                        <input class="register__inp" type="text" name="userName">
+                        <input class="form__inp register__inp" type="text" name="userName">
                     </label>
 
-                    <label class="register__label">
-                        <span class="register__label-span">
+                    <label class="form__label register__label">
+                        <span class="form__label-span register__label-span">
                             Придумайте пароль:
                         </span>
 
-                        <?php if (isset($errors['userPass']) && !$errors['userPass']): ?>
-                            <span class="register__label-err">Это поле обязательно для заполнения</span>
+                        <?php if (!empty($errors['userPass'])): ?>
+                            <span class="form__label-err register__label-err">
+                                <?php echo $errors['userPass'] ?>
+                            </span>
                         <?php endif; ?>
 
-                        <input class="register__inp" type="password" name="userPass">
+                        <input class="form__inp register__inp" type="password" name="userPass">
                     </label>
 
-                    <label class="register__label">
-                        <span class="register__label-span">
+                    <label class="form__label register__label">
+                        <span class="form__label-span register__label-span">
                             Повторите пароль:
                         </span>
 
-                        <?php if (isset($errors['userPassConfirm'])): ?>
-                            <span class="register__label-err">
+                        <?php if (!empty($errors['userPassConfirm'])): ?>
+                            <span class="form__label-err register__label-err">
                                 <?php echo $errors['userPassConfirm'] ?>
                             </span>
                         <?php endif; ?>
 
-<!--                        --><?php //if (isset($errors['userPassMatch']) && $errors['userPassMatch']): ?>
-<!--                            <span class="register__label-err">Пароли не совпадают</span>-->
-<!--                        --><?php //endif; ?>
-
-                        <input class="register__inp" type="password" name="userPassConfirm">
+                        <input class="form__inp register__inp" type="password" name="userPassConfirm">
                     </label>
 
 

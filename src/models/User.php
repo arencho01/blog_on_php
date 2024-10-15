@@ -2,29 +2,41 @@
 
 namespace App\models;
 
+use PDO;
 use App\models\DatabaseManager;
 
 class User
 {
-    public static function getUser(): array
+
+    public static function isUserNameTaken($username): bool
     {
-        $records = DatabaseManager::dbConnect()->prepare("SELECT * FROM users ORDER BY created_at");
+        $username = htmlspecialchars($username, ENT_QUOTES);
+
+        $stmt = DatabaseManager::dbConnect()->prepare("SELECT COUNT(*) FROM users WHERE name = :username");
+        $stmt->execute(['username' => $username]);
+
+        return $stmt->fetchColumn() > 0;
     }
 
-    public static function saveUser($data)
+    public static function addUser($name, $password): bool
     {
-        $stmt = DatabaseManager::dbConnect()->prepare("INSERT INTO users VALUES (:id, :email, :password, :created_at)");
+        $name = htmlspecialchars($name, ENT_QUOTES);
+        $password = htmlspecialchars($password, ENT_QUOTES);
+
+        $stmt = DatabaseManager::dbConnect()->prepare("INSERT INTO users (name, password) VALUES (:name, :password)");
         return $stmt->execute([
-            ':username' => $data['username'],
-            ':email' => $data['email'],
-            ':password' => $data['password']
+            ':name' => $name,
+            ':password' => $password
         ]);
     }
 
-    public static function isUserNameExists($data) {
-        $stmt = DatabaseManager::dbConnect()->prepare("SELECT * FROM users WHERE name = :name LIMIT 1");
-        return $stmt->execute([
-            ':name' => $data['username']
-        ]);
+    public static function checkUserPassByUserName($username)
+    {
+        $username = htmlspecialchars($username, ENT_QUOTES);
+        $stmt = DatabaseManager::dbConnect()->prepare("SELECT password FROM users WHERE name = :username LIMIT 1");
+        $stmt->execute(['username' => $username]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result['password'];
     }
 }

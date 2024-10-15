@@ -13,7 +13,6 @@ class PostController {
 
     public function show($id): void {
         $onePost = Post::getPost($id);
-//        var_dump($onePost);
         View::render('posts/show', ['post' => $onePost]);
     }
 }

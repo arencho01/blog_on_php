@@ -15,6 +15,7 @@
             <div class="container">
 
                 <div class="header__inner">
+                    <?php var_dump($_SESSION); ?>
                     <a class="logo" href="/">
                         <img src="static/images/logo.svg" alt="logo" width="250" height="50">
                     </a>
@@ -26,9 +27,22 @@
                             <li class="nav_item">
                                 <a class="nav__link" href="/?act=search">Поиск статей</a>
                             </li>
+
+                            <?php if(empty($_SESSION['user'])) : ?>
+                                <li class="nav_item">
+                                    <a class="nav__link" href="index.php?controller=user&action=registration">Регистрация</a>
+                                </li>
+
+                                <li class="nav_item">
+                                    <a class="nav__link" href="index.php?controller=user&action=login">Войти</a>
+                                </li>
+                            <?php endif; ?>
+
+                            <?php if(!empty($_SESSION['user'])) : ?>
                             <li class="nav_item">
-                                <a class="nav__link" href="index.php?controller=user&action=registration">Регистрация</a>
+                                <a class="nav__link" href="index.php?controller=user&action=logout">Выйти</a>
                             </li>
+                            <?php endif; ?>
                         </ul>
                     </nav>
                 </div>

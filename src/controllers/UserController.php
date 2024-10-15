@@ -7,7 +7,9 @@ use App\views\viewCore\View;
 
 class UserController
 {
-    public function registration(): void
+    static string $urlPostIndex = "index.php?controller=post&action=index";
+
+    public static function registration(): void
     {
         if($_SERVER["REQUEST_METHOD"] === 'POST')
         {
@@ -15,74 +17,108 @@ class UserController
             $password = trim($_POST['userPass']) ?? '';
             $confirmPass = trim($_POST['userPassConfirm']) ?? '';
 
-            var_dump($name);
-
             $errors = self::checkInputEnter($name, $password, $confirmPass);
-            var_dump($errors);
 
-            View::render('user/registration', ['errors' => $errors]);
+            if (User::isUserNameTaken($name))
+            {
+                $errors['userName'] = 'Пользователь с таким логином уже существует';
+            }
+
+            if (empty($errors['userName']) && empty($errors['userPass']) && empty($errors['userPassConfirm'])) {
+                $password = password_hash($password, PASSWORD_DEFAULT);
+
+                $userData = User::addUser($name, $password);
+
+                if ($userData) {
+                    View::render('user/registrationSuccess');
+                }
+
+            } else {
+                View::render('user/registration', ['errors' => $errors]);
+            }
+
+        } else {
+            View::render('user/registration');
         }
 
-        View::render('user/registration');
     }
 
-//    public function isPostRequest()
-//    {
-//        var_dump($_SERVER['REQUEST_METHOD']);
-//        if()
-//        {
-//            View::render('user/registration');
-//        };
-//    }
-
-    public function registrationSuccess(): void
+    public static function login(): void
     {
-        View::render('user/registrationSuccess');
-    }
+        if($_SERVER["REQUEST_METHOD"] === 'POST')
+        {
+            $name = trim($_POST['userName']) ?? '';
+            $password = trim($_POST['userPass']) ?? '';
 
-    public function checkRegistration(): void
-    {
+//            $errors = [];
+            $errors['userName'] = empty($name) ? 'Это поле обязательно для заполнения' : '';
+            $errors['userPass'] = empty($password) ? 'Это поле обязательно для заполнения' : '';
 
-        $data = [];
-//        var_dump($_POST);
-    }
 
-    public function checkInputEnter($name, $password, $confirmPass): array
-    {
 
-        $errors['userName'] = !empty($name);
-//        $errors['userPass'] = !empty($password);
-//        $errors['userPassConfirm'] = !empty($confirmPass);
+            if (empty($errors['userName']) && !User::isUserNameTaken($name))
+            {
+                $errors['userName'] = 'Такого пользователя не существует';
+            }
 
-        if (!empty($confirmPass) && !empty($password)) {
-            if ($password != $confirmPass) {
-                $errors['userPassConfirm'] = 'Пароли не совпадают';
+            if (!empty($errors['userName']) || !empty($errors['userPass'])) {
+                View::render('user/login', ['errors' => $errors]);
+            } elseif (User::checkUserPassByUserName($name) != $password ) {
+                $errors['userPass'] = 'Пароль для пользователя ' . $name . ' введен не верно';
+                View::render('user/login', ['errors' => $errors]);
             } else {
-                $errors['userPassConfirm'] = 'Это поле обязательно для заполнения';
+                if (!empty($_SESSION['user'])) {
+                    View::render('user/index');
+                } else {
+                    $_SESSION['user'] = $name;
+                    View::render('user/index');
+                }
+            }
+
+        } else {
+            View::render('user/login');
+        }
+
+    }
+
+    public static function logout(): void
+    {
+        if (self::checkAuth()) {
+            $_SESSION['user'] = null;
+            self::redirect(self::$urlPostIndex);
+        }
+    }
+
+    public static function checkAuth(): bool
+    {
+        return !empty($_SESSION['user']);
+    }
+
+
+    public static function checkInputEnter($name, $password, $confirmPass): array
+    {
+        $errors['userName'] = empty($name) ? 'Это поле обязательно для заполнения' : '';
+        $errors['userPass'] = empty($password) ? 'Это поле обязательно для заполнения' : '';
+        $errors['userPassConfirm'] = empty($confirmPass) ? 'Это поле обязательно для заполнения' : '';
+
+        // Проверка на несовпадение паролей
+        if (empty($errors['userPass']) && empty($errors['userPassConfirm'])) {
+            if ($password !== $confirmPass) {
+                $errors['userPassConfirm'] = 'Пароли не совпадают';
             }
         }
-//        else {
-//            if ($confirmPass != $password) {
-//                $errors['userPassConfirm'] = 'Пароли не совпадают';
-//            }
-//        }
-        var_dump('confirmPass:', $confirmPass);
-
-
-//        if ($errors['userPass'] && $errors['userPassConfirm']) {
-//            if ($errors['userPass'] === $errors['userPassConfirm']) {
-//                $errors['userPassMatch'] = true;
-//            } else {
-//                $errors['userPassMatch'] = false;
-//            }
-//        }
 
         return $errors;
     }
 
-//    public function passwordMatch()
-//    {
-//
-//    }
+    public static function redirect($url): void
+    {
+        header('Location: ' . $url);
+        die();
+    }
 
+    public static function search()
+    {
+
+    }
 }
