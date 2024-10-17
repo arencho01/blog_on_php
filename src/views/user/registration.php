@@ -6,7 +6,7 @@
             <div class="register__inner">
                 <h3 class="register__title page-title">Регистрация</h3>
 
-                <form class="form register__form" action="index.php?controller=user&action=registration" method="post">
+                <form class="form register__form" action="index.php?controller=user&action=registration" method="POST">
 
                     <label class="form__label register__label">
                         <span class="form__label-span register__label-span">

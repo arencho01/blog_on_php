@@ -1,5 +1,5 @@
 <?php
-namespace App\views\viewCore;
+namespace App\views;
 
 use Exception;
 
@@ -9,10 +9,9 @@ class View {
 
         extract($data);
 
-        $viewFile = __DIR__ . "/../" . $view . ".php";
-
+        $viewFile = __DIR__ . '/' . $view . ".php";
         if (file_exists($viewFile)) {
-            include_once __DIR__ . "/../$view.php";
+            include_once __DIR__ . "/$view.php";
         } else {
             throw new Exception("View $view not found");
         }

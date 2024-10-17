@@ -3,7 +3,8 @@
 namespace App\controllers;
 
 use App\models\User;
-use App\views\viewCore\View;
+use App\views\View;
+use App\services\Validator;
 
 class UserController
 {
@@ -13,72 +14,57 @@ class UserController
     {
         if($_SERVER["REQUEST_METHOD"] === 'POST')
         {
-            $name = trim($_POST['userName']) ?? '';
-            $password = trim($_POST['userPass']) ?? '';
-            $confirmPass = trim($_POST['userPassConfirm']) ?? '';
+            $name = Validator::sanitizeInput($_POST['userName']) ?? '';
+            $password = Validator::sanitizeInput($_POST['userPass']) ?? '';
+            $confirmPass = Validator::sanitizeInput($_POST['userPassConfirm']) ?? '';
 
-            $errors = self::checkInputEnter($name, $password, $confirmPass);
+            $errors = Validator::validateRegisterFields($name, $password, $confirmPass);
 
-            if (User::isUserNameTaken($name))
-            {
+            if (User::isUserNameTaken($name)) {
                 $errors['userName'] = 'Пользователь с таким логином уже существует';
             }
 
-            if (empty($errors['userName']) && empty($errors['userPass']) && empty($errors['userPassConfirm'])) {
-                $password = password_hash($password, PASSWORD_DEFAULT);
+            if (empty($errors)) {
+                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-                $userData = User::addUser($name, $password);
-
-                if ($userData) {
-                    View::render('user/registrationSuccess');
+                if (User::addUser($name, $hashedPassword)) {
+                    $_SESSION['user'] = $name;
+                    self::redirect(self::$urlPostIndex);
                 }
 
             } else {
                 View::render('user/registration', ['errors' => $errors]);
+                return;
             }
-
-        } else {
-            View::render('user/registration');
         }
-
+        View::render('user/registration');
     }
 
     public static function login(): void
     {
         if($_SERVER["REQUEST_METHOD"] === 'POST')
         {
-            $name = trim($_POST['userName']) ?? '';
-            $password = trim($_POST['userPass']) ?? '';
+            $name = htmlspecialchars(trim($_POST['userName']), ENT_QUOTES) ?? '';
+            $password = htmlspecialchars(trim($_POST['userPass']), ENT_QUOTES) ?? '';
 
-//            $errors = [];
-            $errors['userName'] = empty($name) ? 'Это поле обязательно для заполнения' : '';
-            $errors['userPass'] = empty($password) ? 'Это поле обязательно для заполнения' : '';
+            $errors = Validator::validateLoginFields($name, $password);
 
-
-
-            if (empty($errors['userName']) && !User::isUserNameTaken($name))
-            {
-                $errors['userName'] = 'Такого пользователя не существует';
+            if(!empty($errors)) {
+                View::render('user/login', ['errors' => $errors]);
+                return;
             }
 
-            if (!empty($errors['userName']) || !empty($errors['userPass'])) {
+            if (User::getUserPassword($name) != $password) {
+                $errors['userPass'] = 'Неправильный пароль';
                 View::render('user/login', ['errors' => $errors]);
-            } elseif (User::checkUserPassByUserName($name) != $password ) {
-                $errors['userPass'] = 'Пароль для пользователя ' . $name . ' введен не верно';
-                View::render('user/login', ['errors' => $errors]);
-            } else {
-                if (!empty($_SESSION['user'])) {
-                    View::render('user/index');
-                } else {
-                    $_SESSION['user'] = $name;
-                    View::render('user/index');
-                }
+                return;
             }
 
-        } else {
-            View::render('user/login');
+            $_SESSION['user'] = $name;
+            self::redirect(self::$urlPostIndex);
         }
 
+        View::render('user/login');
     }
 
     public static function logout(): void
@@ -94,31 +80,9 @@ class UserController
         return !empty($_SESSION['user']);
     }
 
-
-    public static function checkInputEnter($name, $password, $confirmPass): array
-    {
-        $errors['userName'] = empty($name) ? 'Это поле обязательно для заполнения' : '';
-        $errors['userPass'] = empty($password) ? 'Это поле обязательно для заполнения' : '';
-        $errors['userPassConfirm'] = empty($confirmPass) ? 'Это поле обязательно для заполнения' : '';
-
-        // Проверка на несовпадение паролей
-        if (empty($errors['userPass']) && empty($errors['userPassConfirm'])) {
-            if ($password !== $confirmPass) {
-                $errors['userPassConfirm'] = 'Пароли не совпадают';
-            }
-        }
-
-        return $errors;
-    }
-
     public static function redirect($url): void
     {
         header('Location: ' . $url);
         die();
-    }
-
-    public static function search()
-    {
-
     }
 }

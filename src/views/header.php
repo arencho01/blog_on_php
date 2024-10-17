@@ -15,7 +15,6 @@
             <div class="container">
 
                 <div class="header__inner">
-                    <?php var_dump($_SESSION); ?>
                     <a class="logo" href="/">
                         <img src="static/images/logo.svg" alt="logo" width="250" height="50">
                     </a>
@@ -25,7 +24,10 @@
                                 <a class="nav__link active" href="/">Главная</a>
                             </li>
                             <li class="nav_item">
-                                <a class="nav__link" href="/?act=search">Поиск статей</a>
+                                <form class="form nav__form" action="index.php?controller=post&action=search" method="POST">
+                                    <input class="form__inp nav__item-inp" name="searchInput" type="text" placeholder="Поиск">
+                                    <button class="btn nav__btn" type="submit">Найти</button>
+                                </form>
                             </li>
 
                             <?php if(empty($_SESSION['user'])) : ?>
@@ -39,9 +41,13 @@
                             <?php endif; ?>
 
                             <?php if(!empty($_SESSION['user'])) : ?>
-                            <li class="nav_item">
-                                <a class="nav__link" href="index.php?controller=user&action=logout">Выйти</a>
-                            </li>
+                                <li class="nav_item">
+                                    <a class="nav__link" href="index.php?controller=post&action=add">Добавить статью</a>
+                                </li>
+
+                                <li class="nav_item">
+                                    <a class="nav__link" href="index.php?controller=user&action=logout">Выйти</a>
+                                </li>
                             <?php endif; ?>
                         </ul>
                     </nav>
